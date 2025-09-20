@@ -8,8 +8,8 @@ export async function getCompareDisposable() {
     return vscode.commands.registerCommand("jsoneditor.compare", async () => {
         vscode.window.visibleTextEditors.forEach(editor => {
             if (editor.document.languageId === "json") {
-                if (!leftEditor) leftEditor = editor;
-                else rightEditor ??= editor;
+                if (!leftEditor && editor !== rightEditor) leftEditor = editor;
+                else if (editor !== leftEditor) rightEditor ??= editor;
             }
         });
         if (!leftEditor) {
@@ -20,7 +20,7 @@ export async function getCompareDisposable() {
             const rightDoc = await vscode.workspace.openTextDocument({ language: "json", content: "" });
             rightEditor = await vscode.window.showTextDocument(rightDoc, { viewColumn: vscode.ViewColumn.Two, preserveFocus: true });
         }
-        vscode.window.showInformationMessage("Paste JSON into both editors, then run Compare again.");
+        vscode.window.showInformationMessage("Compare your JSONs");
     });
 }
 
@@ -33,6 +33,20 @@ export async function getChangeListener() {
         }
     });
 }
+
+export async function getDocumentCloseListener() {
+    return vscode.window.onDidChangeVisibleTextEditors(async (editors) => {
+
+        if (leftEditor && !editors.includes(leftEditor)) {
+            leftEditor = rightEditor;
+            rightEditor = undefined;
+        }
+        if (rightEditor && !editors.includes(rightEditor)) {
+            rightEditor = undefined;
+        }
+    });
+}
+
 
 async function runComparision() {
     const jsondiffpatch = await import('jsondiffpatch');
@@ -62,7 +76,7 @@ async function runComparision() {
         left.setDecorations(redDecoration, leftReds);
         const [rightGreens, rightReds] = highlightDifferences(rightJson, leftJson, rightAst);
         right.setDecorations(greenDecoration, rightGreens);
-        right.setDecorations(redDecoration, rightReds);
+        right.setDecorations(redDecoration, rightReds); 
     } catch (err: any) {
         vscode.window.showErrorMessage("Invalid JSON: " + err.message);
     }
@@ -74,11 +88,20 @@ function clearHighlights(editor: vscode.TextEditor) {
 }
 
 const greenDecoration = vscode.window.createTextEditorDecorationType({
-    backgroundColor: "rgba(0,255,0,0.15)"
+    backgroundColor: "rgba(76, 175, 80, 0.15)", // soft green
+    border: "1px solid rgba(76, 175, 80, 0.7)",
+    borderRadius: "2px",
+    overviewRulerLane: vscode.OverviewRulerLane.Full,
+    overviewRulerColor: "rgba(76,175,80,0.8)"
+
 });
 
 const redDecoration = vscode.window.createTextEditorDecorationType({
-    backgroundColor: "rgba(255,0,0,0.15)"
+    backgroundColor: "rgba(244, 67, 54, 0.15)", // soft red
+    border: "1px solid rgba(244, 67, 54, 0.7)",
+    borderRadius: "2px",
+    overviewRulerLane: vscode.OverviewRulerLane.Full,
+    overviewRulerColor: "rgba(244,67,54,0.8)"
 });
 
 function highlightDifferences(
