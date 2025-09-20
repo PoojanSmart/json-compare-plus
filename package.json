@@ -5,6 +5,7 @@
   "displayName": "JSON Compare+",
   "description": "JSON Compare+",
   "version": "0.0.1",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.104.0"
   },
