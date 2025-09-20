@@ -1,9 +1,9 @@
 {
-  "name": "json-editor",
+  "name": "json-compare-plus",
   "repository" : "https://github.com/PoojanSmart/JSON-Editor.git",
   "author": "Poojan Smart",
-  "displayName": "json-editor",
-  "description": "JSON Editor",
+  "displayName": "JSON Compare+",
+  "description": "JSON Compare+",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.104.0"
