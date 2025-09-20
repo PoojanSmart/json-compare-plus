@@ -1,5 +1,7 @@
 {
   "name": "json-editor",
+  "repository" : "https://github.com/PoojanSmart/JSON-Editor.git",
+  "author": "Poojan Smart",
   "displayName": "json-editor",
   "description": "JSON Editor",
   "version": "0.0.1",
