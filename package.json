@@ -2,10 +2,12 @@
   "name": "json-compare-plus",
   "repository" : "https://github.com/PoojanSmart/JSON-Editor.git",
   "author": "Poojan Smart",
+  "publisher": "PoojanSmart",
   "displayName": "JSON Compare+",
-  "description": "JSON Compare+",
+  "description": "Compare and filter JSON files with ease using JMESPath queries.",
   "version": "0.0.1",
   "license": "MIT",
+  "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.104.0"
   },
